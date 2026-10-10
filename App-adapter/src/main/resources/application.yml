@@ -1,0 +1,45 @@
+server:
+  port: 8083
+  shutdown: graceful
+
+spring:
+  lifecycle:
+    timeout-per-shutdown-phase: 30s
+
+  application:
+    name: app-adapter
+
+  datasource:
+    url: jdbc:oracle:thin:@gru_db:1521/XEPDB1
+    username: GRU
+    password: ${GRU_APP_PASSWORD}
+    driver-class-name: oracle.jdbc.OracleDriver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+      connection-timeout: 30000
+
+  kafka:
+    bootstrap-servers: kafka:9092
+    producer:
+      acks: all
+      retries: 3
+    consumer:
+      group-id: app-adapter-group
+      auto-offset-reset: earliest
+      enable-auto-commit: false
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: foodcards.adapter.models
+  configuration:
+    map-underscore-to-camel-case: true
+
+app:
+  kafka:
+    batch-size: 100
+    sleep-time-ms: "5 sec"
+    topic-out-balance: gru.balance.out
+    topic-in-balance: gru.balance.in
+    topic-out-food: gru.food.out
+    topic-in-food: gru.food.in

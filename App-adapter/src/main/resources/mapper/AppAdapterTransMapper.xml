@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="foodcards.adapter.mapper.AppAdapterTransMapper">
+
+    <resultMap id="AppAdapterTransResult" type="foodcards.adapter.models.AppAdapterTransEntity">
+        <id property="id" column="ID"/>
+        <result property="systemId" column="SYSTEM_ID"/>
+        <result property="requestId" column="REQUEST_ID"/>
+        <result property="eventType" column="EVENT_TYPE"/>
+        <result property="data" column="DATA"/>
+        <result property="status" column="STATUS"/>
+        <result property="respCode" column="RESP_CODE"/>
+        <result property="respDesc" column="RESP_DESC"/>
+        <result property="insTs" column="INS_TS"/>
+        <result property="updTs" column="UPD_TS"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="foodcards.adapter.models.AppAdapterTransEntity">
+        <selectKey keyProperty="id" resultType="java.lang.Long" order="BEFORE">
+        SELECT ACC_APP_ADAPTER.APP_ADAPTER_TRANS_SEQ.NEXTVAL FROM DUAL
+    </selectKey>
+        INSERT INTO ACC_APP_ADAPTER.APP_ADAPTER_TRANS (
+                    ID, SYSTEM_ID, REQUEST_ID, EVENT_TYPE, DATA, STATUS, INS_TS, UPD_TS )
+        VALUES (
+                    #{id}, #{systemId}, #{requestId}, #{eventType}, #{data}, #{status}, SYSDATE, SYSDATE)
+    </insert>
+
+    <update id="updateStatus">
+        UPDATE ACC_APP_ADAPTER.APP_ADAPTER_TRANS
+        SET status = #{status},
+            UPD_TS = SYSDATE
+        WHERE ID = #{id}
+
+    </update>
+
+    <select id="findByRequestId" resultMap="AppAdapterTransResult">
+        SELECT *
+        FROM ACC_APP_ADAPTER.APP_ADAPTER_TRANS
+        WHERE REQUEST_ID = #{requestId}
+    </select>
+
+    <select id="countByStatus" resultType="int">
+        SELECT COUNT(*)
+        FROM ACC_APP_ADAPTER.APP_ADAPTER_TRANS
+        WHERE status = #{status}
+    </select>
+
+</mapper>

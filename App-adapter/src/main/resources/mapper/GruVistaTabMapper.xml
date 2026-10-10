@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="foodcards.adapter.mapper.GruVistaTabMapper">
+    <resultMap id="GruVistaTabResult" type="foodcards.adapter.models.GruVistaTabEntity">
+        <id property="id" column="ID"/>
+        <result property="systemAccount" column="SYSTEMACCOUNT"/>
+        <result property="currency" column="CURRENCY"/>
+        <result property="xalfa" column="XALFA"/>
+        <result property="operation" column="OPERATION"/>
+        <result property="timeStamp" column="TIME_STAMP"/>
+        <result property="pomId" column="POM_ID"/>
+        <result property="uterrario" column="UTERRARIO"/>
+        <result property="oldTbal" column="OLDTBAL"/>
+        <result property="newTbal" column="NEWTBAL"/>
+        <result property="addInfo" column="ADD_INFO"/>
+        <result property="fileId" column="FILE_ID"/>
+        <result property="focStatus" column="FOC_STATUS"/>
+        <result property="focTs" column="FOC_TS"/>
+        <result property="focType" column="FOC_TYPE"/>
+        <result property="svfeLoadId" column="SVFE_LOAD_ID"/>
+    </resultMap>
+
+
+    <select id="selectWaitingRecords" resultMap="GruVistaTabResult">
+        SELECT *
+        FROM GRU.GRU_VISTA_TAB
+        WHERE FOC_STATUS = 'WAIT'
+        AND ROWNUM &lt;= #{n}
+        FOR UPDATE SKIP LOCKED
+    </select>
+
+    <update id="updateStatusToProgress">
+        UPDATE GRU.GRU_VISTA_TAB
+        SET foc_status = 'PROGRESS',
+            foc_ts = SYSDATE
+        WHERE id IN
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <update id="updateStatusToError">
+        UPDATE GRU.GRU_VISTA_TAB
+        SET foc_status = 'ERROR',
+            foc_ts = SYSDATE
+        WHERE id IN
+        <foreach item="id" collection="ids" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </update>
+
+    <update id="updateDataSuccess">
+        UPDATE GRU.GRU_VISTA_TAB
+        SET foc_status = 'SUCCESS',
+            NEWTBAL = #{newTbal},
+            OLDTBAL = #{oldTbal},
+            FOC_TS = SYSDATE
+        WHERE ID = #{id}
+    </update>
+</mapper>

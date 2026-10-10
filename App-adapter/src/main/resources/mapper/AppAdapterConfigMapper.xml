@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="foodcards.adapter.mapper.AppAdapterConfigMapper">
+    <resultMap id="ConfigResult" type="foodcards.adapter.models.AppAdapterConfigEntity">
+        <id property="id" column="ID"/>
+        <result property="systemId" column="SYSTEMID"/>
+        <result property="eventType" column="EVENT_TYPE"/>
+        <result property="entityType" column="ENTITY_TYPE"/>
+        <result property="topicIn" column="TOPIC_IN"/>
+        <result property="statusIn" column="STATUS_IN"/>
+        <result property="topicOut" column="TOPIC_OUT"/>
+        <result property="statusOut" column="STATUS_OUT"/>
+    </resultMap>
+
+    <select id="findAll" resultMap="ConfigResult">
+        SELECT *
+        FROM ACC_APP_ADAPTER.APP_ADAPTER_CONFIG
+        WHERE STATUS_IN = 1 OR STATUS_OUT = 1
+    </select>
+</mapper>

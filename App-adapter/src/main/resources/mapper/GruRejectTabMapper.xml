@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="foodcards.adapter.mapper.GruRejectTabMapper">
+    <insert id="insert" parameterType="foodcards.adapter.models.GruRejectTabEntity">
+        <selectKey keyProperty="id" resultType="java.lang.Long" order="BEFORE">
+            SELECT GRU_REJECT_TAB_SEQ.NEXTVAL
+            FROM DUAL
+        </selectKey>
+
+        INSERT INTO GRU.GRU_REJECT_TAB (
+            ID, SYSTEMACCOUNT, VISTA_TAB_ID, UTERRARIO, OLDTBAL, NEWTBAL,
+            FRONT_TIMESTAMP, FRONT_STATUS, REJECT_DESC, CHECK_STATUS, CHECK_TIMESTAMP
+        ) VALUES (
+            #{id}, #{systemAccount}, #{vistaTabId}, #{uterrario}, #{oldTbal}, #{newTbal},
+            SYSDATE, #{frontStatus}, #{rejectDesc}, #{checkStatus}, SYSDATE
+        )
+
+
+    </insert>
+</mapper>
